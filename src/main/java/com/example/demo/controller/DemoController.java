@@ -44,7 +44,7 @@ public class DemoController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity deleteDemoById(@PathVariable Long id){
         demoService.deleteDemoById(id);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(ResponseHandler.generateResponse(HttpStatus.OK), HttpStatus.OK);
     }
 
     @PutMapping("update/{id}")

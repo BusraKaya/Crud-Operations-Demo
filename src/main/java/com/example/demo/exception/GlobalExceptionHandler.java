@@ -16,4 +16,13 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(genericResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(DemoAlreadyExistsException.class)
+    public ResponseEntity<Object> handleDemoAlreadyExistsException (DemoAlreadyExistsException demoAlreadyExistsException){
+        GenericResponse genericResponse = GenericResponse.builder()
+                .message(demoAlreadyExistsException.getMessage())
+                .build();
+        return new ResponseEntity<>(genericResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+
+    }
 }
