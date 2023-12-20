@@ -3,11 +3,11 @@ package com.example.demo.controller;
 import com.example.demo.dto.DemoDto;
 import com.example.demo.model.Demo;
 import com.example.demo.repository.DemoRepository;
-import com.example.demo.response.GenericResponse;
 import com.example.demo.response.ResponseHandler;
 import com.example.demo.service.DemoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,39 +26,38 @@ public class DemoController {
     private final DemoRepository demoRepository;
 
     @PostMapping("/save")
-    public GenericResponse saveDemo(@RequestBody DemoDto demoDto){
+    public ResponseEntity saveDemo(@RequestBody DemoDto demoDto){
         Demo demo = demoService.saveDemo(demoDto);
-        return ResponseHandler.generateResponse(HttpStatus.CREATED, demo);
-       // ResponseHandler responseHandler = new ResponseHandler(); Utility sınıfların objesi olmaz
+        return new ResponseEntity(ResponseHandler.generateResponse(HttpStatus.CREATED, demo), HttpStatus.CREATED);
     }
 
     @GetMapping("/demos")
-    public GenericResponse getAllDemos(){
-        return ResponseHandler.generateResponse(HttpStatus.OK, demoService.getAllDemos());
+    public ResponseEntity getAllDemos(){
+        return new ResponseEntity<>(ResponseHandler.generateResponse(HttpStatus.OK, demoService.getAllDemos()),HttpStatus.OK);
     }
 
     @GetMapping()
-    public GenericResponse getDemoById(@RequestParam(name = "param1", required = true) Long id){
-        return ResponseHandler.generateResponse(demoService.getDemoById(id));
+    public ResponseEntity getDemoById(@RequestParam(name = "param1", required = true) Long id){
+        return new ResponseEntity<>(ResponseHandler.generateResponse(demoService.getDemoById(id)), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public GenericResponse deleteDemoById(@PathVariable Long id){
+    public ResponseEntity deleteDemoById(@PathVariable Long id){
         demoService.deleteDemoById(id);
-        return ResponseHandler.generateResponse(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @PutMapping("update/{id}")
-    public GenericResponse updateEntity(@PathVariable Long id, @RequestBody DemoDto demoDto){
+    public ResponseEntity updateEntity(@PathVariable Long id, @RequestBody DemoDto demoDto){
         Demo demo = demoService.updateDemo(id, demoDto);
-        return ResponseHandler.generateResponse("Updated successfully", HttpStatus.OK, demo);
+        return new ResponseEntity(ResponseHandler.generateResponse("Updated successfully", HttpStatus.OK, demo), HttpStatus.OK);
     }
 
     @GetMapping("/pagination")
-    public GenericResponse getItems(
+    public ResponseEntity getItems(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        return ResponseHandler.generateResponse(demoService.getDemoListPagination(page, size));
+        return new ResponseEntity(ResponseHandler.generateResponse(demoService.getDemoListPagination(page, size)), HttpStatus.OK);
     }
 }
