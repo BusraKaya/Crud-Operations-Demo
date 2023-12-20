@@ -26,29 +26,29 @@ public class DemoController {
     private final DemoRepository demoRepository;
 
     @PostMapping("/save")
-    public ResponseEntity saveDemo(@RequestBody DemoDto demoDto){
+    public ResponseEntity saveDemo(@RequestBody DemoDto demoDto) {
         Demo demo = demoService.saveDemo(demoDto);
         return new ResponseEntity(ResponseHandler.generateResponse(HttpStatus.CREATED, demo), HttpStatus.CREATED);
     }
 
     @GetMapping("/demos")
-    public ResponseEntity getAllDemos(){
-        return new ResponseEntity<>(ResponseHandler.generateResponse(HttpStatus.OK, demoService.getAllDemos()),HttpStatus.OK);
+    public ResponseEntity getAllDemos() {
+        return new ResponseEntity<>(ResponseHandler.generateResponse(HttpStatus.OK, demoService.getAllDemos()), HttpStatus.OK);
     }
 
     @GetMapping()
-    public ResponseEntity getDemoById(@RequestParam(name = "param1", required = true) Long id){
+    public ResponseEntity getDemoById(@RequestParam(name = "param1", required = true) Long id) {
         return new ResponseEntity<>(ResponseHandler.generateResponse(demoService.getDemoById(id)), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteDemoById(@PathVariable Long id){
+    public ResponseEntity deleteDemoById(@PathVariable Long id) {
         demoService.deleteDemoById(id);
         return new ResponseEntity<>(ResponseHandler.generateResponse(HttpStatus.OK), HttpStatus.OK);
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity updateEntity(@PathVariable Long id, @RequestBody DemoDto demoDto){
+    public ResponseEntity updateEntity(@PathVariable Long id, @RequestBody DemoDto demoDto) {
         Demo demo = demoService.updateDemo(id, demoDto);
         return new ResponseEntity(ResponseHandler.generateResponse("Updated successfully", HttpStatus.OK, demo), HttpStatus.OK);
     }
