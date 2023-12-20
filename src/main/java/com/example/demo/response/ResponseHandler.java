@@ -2,7 +2,7 @@ package com.example.demo.response;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.http.HttpStatus;
-@UtilityClass // Objesi olmaması gereken full statik methodları içeren sınıflarda private const uyarısı verdi.
+@UtilityClass // Private constructor warn
 public class ResponseHandler {
     public static GenericResponse generateResponse(String message, HttpStatus status, Object responseObj) {
         return GenericResponse.builder()
