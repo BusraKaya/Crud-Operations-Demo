@@ -1,0 +1,16 @@
+package com.example.demo.service;
+
+import com.example.demo.dto.DemoDto;
+import com.example.demo.model.Demo;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface DemoService {
+    public Demo saveDemo(DemoDto demoDto);
+    public Optional<Demo> getDemoById(Long id);
+    public void deleteDemoById(Long id);
+    public List<Demo> getAllDemos();
+    public Demo updateDemo(Long id, DemoDto demoDto);
+    public List<Demo> getDemoListPagination(int page , int size);
+}
