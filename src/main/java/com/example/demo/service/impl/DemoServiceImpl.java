@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.DemoDto;
+import com.example.demo.exception.DemoNotFoundException;
 import com.example.demo.model.Demo;
 import com.example.demo.repository.DemoRepository;
 import com.example.demo.service.DemoService;
@@ -49,7 +50,7 @@ public class DemoServiceImpl implements DemoService {
         Optional<Demo> demo = demoRepository.findById(id);
         if(!demo.isPresent()){
             log.error("Entity not found with id: " + id);
-            throw new EntityNotFoundException("Entity not found!");
+            throw new DemoNotFoundException("Demo entity not found!");
         }
         demoRepository.deleteById(id);
         log.info("Demo object is deleted successfully");

@@ -9,8 +9,8 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class GenericResponse<T> {
-    private T data;
+public class GenericResponse {
+    private Object data;
     private String status;
     private String message;
 }
