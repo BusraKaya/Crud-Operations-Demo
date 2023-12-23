@@ -4,7 +4,6 @@ import com.example.demo.dto.DemoDto;
 import com.example.demo.model.Demo;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface DemoService {
     public Demo saveDemo(DemoDto demoDto);

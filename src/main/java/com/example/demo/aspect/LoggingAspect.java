@@ -1,5 +1,6 @@
 package com.example.demo.aspect;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -8,15 +9,14 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
-import java.util.logging.Logger;
 
+@Slf4j
 @Aspect
 public class LoggingAspect {
-
-    private final Logger logger = Logger.getLogger(LoggingAspect.class.getName());
+//    private final Logger logger = Logger.getLogger(LoggingAspect.class.getName());
 
 //    Your @Around advice proceeds, but does not return the result of the proceed() call.
 //    Your advice method has a void return type, your intercepted target method has not.
@@ -31,12 +31,12 @@ public class LoggingAspect {
 //    modify method parameters or return values, handle exceptions or other things potentially changing the control flow:
     @Around("execution(* com.example.demo.service.*.*(..))")
     public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
-        logger.info("Method called with name: " + joinPoint.getSignature().getName());
-        logger.info("Method args: " + Arrays.toString(joinPoint.getArgs()));
+        log.info("Around Method called with name: " + joinPoint.getSignature().getName());
+        log.info("Method args: " + Arrays.toString(joinPoint.getArgs()));
 
         try {
             Object returnedByMethod = joinPoint.proceed();
-            logger.info("Method returned with: " + returnedByMethod);
+            log.info("Around Method returned with: " + returnedByMethod);
             return returnedByMethod;
 ////    Aspect'in ProceedingJoinPoint parametresinin proceed() metodunu çağırmazsanız,
 ////    bu aspect hiçbir zaman yakalanan metoda başvurmaz.
@@ -44,18 +44,29 @@ public class LoggingAspect {
 ////    Metodu çağıran, gerçek metodun hiçbir zaman yürütülmediğini bilemez.
         }
         finally {
-            logger.info("Method executed  " + joinPoint.getSignature().getName());
+            log.info("Method executed  " + joinPoint.getSignature().getName());
         }
     }
 
     @Around("@annotation(Log)")
     public Object logWithAnnotation(ProceedingJoinPoint joinPoint) throws Throwable {
-        logger.info("[Method started] " + joinPoint.getSignature().getName());
+        log.info("[Method started] " + joinPoint.getSignature().getName());
         try{
             return joinPoint.proceed();
         }finally {
 
-            logger.info("[Method finished] " + joinPoint.getSignature().getName());
+            log.info("[Method finished] " + joinPoint.getSignature().getName());
+        }
+    }
+
+    @Around("@annotation(Log2)")
+    public Object logWithAnnotation2(ProceedingJoinPoint joinPoint) throws Throwable {
+        log.info("[Method started2] " + joinPoint.getSignature().getName());
+        try{
+            return joinPoint.proceed();
+        }finally {
+
+            log.info("[Method finished2] " + joinPoint.getSignature().getName());
         }
     }
 
@@ -64,12 +75,12 @@ public class LoggingAspect {
 
     @Before("execution(* com.example.demo.service.*.*(..))")
     public void logBefore(JoinPoint joinPoint) {
-        logger.info("[BEFORE] " + joinPoint);
+        log.info(MessageFormat.format("[BEFORE] {0} " , joinPoint));
     }
 
     @After("execution(* com.example.demo.service.*.*(..))")
     public void logAfter(JoinPoint joinPoint) {
-        logger.info("[AFTER] " + joinPoint);
+        log.info("[AFTER] " + joinPoint);
     }
 
 //    @Around advice anotasyonunu kullandık.
@@ -80,13 +91,13 @@ public class LoggingAspect {
     @AfterReturning(value = "@annotation(Log)",
             returning = "returnedValue")
     public void log(Object returnedValue) { // Gives returned value of method as a parameter
-        logger.info("Method executed and returned " + returnedValue);
+        log.info("Method executed and returned " + returnedValue);
     }
 
     @AfterThrowing( value = "@annotation(Log)", throwing = "exception") // Project could not start without adding exception
     public void logError(JoinPoint joinPoint, Exception exception) {
-        logger.info("Method executed and exception occurred " + exception.getMessage());
-        logger.info("Joinpoint method: " + joinPoint.getSignature().getName());
+        log.info("Method executed and exception occurred " + exception.getMessage());
+        log.info("Joinpoint method: " + joinPoint.getSignature().getName());
     }
 
 }

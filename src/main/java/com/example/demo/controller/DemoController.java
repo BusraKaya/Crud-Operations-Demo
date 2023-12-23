@@ -7,7 +7,6 @@ import com.example.demo.repository.DemoRepository;
 import com.example.demo.response.ResponseHandler;
 import com.example.demo.service.DemoService;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

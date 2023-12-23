@@ -6,14 +6,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@NoArgsConstructor
+@Builder
 @Table(name = "demo")
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Demo {
     @Id
@@ -21,11 +24,4 @@ public class Demo {
     private Long id;
     private String name;
     private String age;
-    @Builder
-    public Demo(Long id, String name, String age) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-    }
-
 }

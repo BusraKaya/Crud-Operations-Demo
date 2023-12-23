@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -17,6 +18,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 public class SecurityConfig {
 
+    @Value("${user.password}")
+    private String userPassword;
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -26,7 +30,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         UserDetails user1 = User.builder()
                 .username("user")
-                .password(bCryptPasswordEncoder().encode("userPass"))
+                .password(bCryptPasswordEncoder().encode(userPassword))
                 .roles("USER")
                 .build();
         return new InMemoryUserDetailsManager(user1);
