@@ -40,8 +40,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(x -> x.requestMatchers("/public/**").permitAll())
-                .authorizeHttpRequests(x -> x.requestMatchers("api/v1/**").hasRole("USER"))
-                .authorizeHttpRequests(x -> x.anyRequest().authenticated())
+                .authorizeHttpRequests(x -> x.requestMatchers("api/v1/**").authenticated())
                 .httpBasic(Customizer.withDefaults());
 
         return httpSecurity.build();
