@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.aspect.Log;
 import com.example.demo.dto.DemoDto;
 import com.example.demo.model.Demo;
 import com.example.demo.repository.DemoRepository;
@@ -42,6 +43,7 @@ public class DemoController {
         return new ResponseEntity<>(ResponseHandler.generateResponse(demoService.getDemoById(id)), HttpStatus.OK);
     }
 
+    @Log
     @DeleteMapping("/delete/{id}")
     public ResponseEntity deleteDemoById(@PathVariable Long id) {
         demoService.deleteDemoById(id);
@@ -54,6 +56,7 @@ public class DemoController {
         return new ResponseEntity(ResponseHandler.generateResponse("Updated successfully", HttpStatus.OK, demo), HttpStatus.OK);
     }
 
+    @Log
     @GetMapping("/pagination")
     public ResponseEntity getItems(
             @RequestParam(defaultValue = "0") int page,

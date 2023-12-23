@@ -1,8 +1,12 @@
 package com.example.demo.aspect;
 
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -23,24 +27,35 @@ public class LoggingAspect {
 //    Either keep the @Around advice, if you really think you need it.
 //    Usually, this is only the case if you want to do more than log things, e.g.
 //    modify method parameters or return values, handle exceptions or other things potentially changing the control flow:
-    @Around("execution(* com.example.demo.service.*.*(..))")
-    public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
-        logger.info("Method called with name: " + joinPoint.getSignature().getName());
-        logger.info("Method args: " + Arrays.toString(joinPoint.getArgs()));
+//    @Around("execution(* com.example.demo.service.*.*(..))")
+//    public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
+//        logger.info("Method called with name: " + joinPoint.getSignature().getName());
+//        logger.info("Method args: " + Arrays.toString(joinPoint.getArgs()));
+//
+//        try {
+//            Object returnedByMethod = joinPoint.proceed();
+//            logger.info("Method returned with: " + returnedByMethod);
+//            return returnedByMethod;
+////    Aspect'in ProceedingJoinPoint parametresinin proceed() metodunu çağırmazsanız,
+////    bu aspect hiçbir zaman yakalanan metoda başvurmaz.
+////    Bu durumda, aspect yalnızca yakalanan metod yerine yürütülür.
+////    Metodu çağıran, gerçek metodun hiçbir zaman yürütülmediğini bilemez.
+//        }
+//        finally {
+//            logger.info("Method executed  " + joinPoint.getSignature().getName());
+//        }
+//    }
 
-        try {
-            Object returnedByMethod = joinPoint.proceed();
-            logger.info("Method returned with: " + returnedByMethod);
-            return returnedByMethod;
-//    Aspect'in ProceedingJoinPoint parametresinin proceed() metodunu çağırmazsanız,
-//    bu aspect hiçbir zaman yakalanan metoda başvurmaz.
-//    Bu durumda, aspect yalnızca yakalanan metod yerine yürütülür.
-//    Metodu çağıran, gerçek metodun hiçbir zaman yürütülmediğini bilemez.
-        }
-        finally {
-            logger.info("Method executed  " + joinPoint.getSignature().getName());
-        }
-    }
+//    @Around("@annotation(Log)")
+//    public Object logWithAnnotation(ProceedingJoinPoint joinPoint) throws Throwable {
+//        logger.info("[Method started] " + joinPoint.getSignature().getName());
+//        try{
+//            return joinPoint.proceed();
+//        }finally {
+//
+//            logger.info("[Method finished] " + joinPoint.getSignature().getName());
+//        }
+//    }
 
 //    Or keep it simple and just use a pair of @Before and @After advice methods, if there is no need to transfer data from one advice to the other.
 //    This is much simpler, because you do not need to proceed, use try-finally or return anything:
@@ -54,4 +69,22 @@ public class LoggingAspect {
 //    public void logAfter(JoinPoint joinPoint) {
 //        logger.info("[AFTER] " + joinPoint);
 //    }
+
+//    @Around advice anotasyonunu kullandık.
+//    Bu gerçekten de Spring uygulamalarındaki advice anotasyonlarından en çok kullanılanıdır,
+//    çünkü yakalanan metoddan önce, sonra veya yakalanan metod yerine
+//    olmak üzere herhangi bir implement durumunu kapsayabilirsiniz. Logic'i istediğiniz şekilde değiştirebilirsiniz.
+
+    @AfterReturning(value = "@annotation(Log)",
+            returning = "returnedValue")
+    public void log(Object returnedValue) { // Gives returned value of method as a parameter
+        logger.info("Method executed and returned " + returnedValue);
+    }
+
+    @AfterThrowing( value = "@annotation(Log)", throwing = "exception")
+    public void logError(JoinPoint joinPoint, Exception exception) { // Gives returned value of method as a parameter
+        logger.info("Method executed and exception occurred " + exception.getMessage());
+        logger.info("Joinpoint method: " + joinPoint.getSignature().getName());
+    }
+
 }
